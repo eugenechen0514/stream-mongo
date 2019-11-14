@@ -25,6 +25,10 @@ interface UnsetObject {
     [key: string] : string
 }
 
+/**
+ *
+ * Source code from: https://github.com/AbdullahAli/node-stream-to-mongo-db
+ */
 export function insertStreamToMongoDB(options: InsertStreamToMongoDBOptions = {dbURL: '', collection: ''}) {
     assert(options.dbURL, '"dbURL" should no empty');
     assert(options.collection, '"collection" should no empty');
