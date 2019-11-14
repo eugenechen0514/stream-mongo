@@ -14,6 +14,7 @@ export interface MongoCollectionSyncOptions {
     targetUrl: string,
     targetCollection: string,
     cloneBeforeWatch?: boolean,
+    pipeline?: any[],
 }
 
 enum MongoCollectionMirrorSyncEvent {
@@ -37,7 +38,7 @@ export class MongoCollectionMirrorSync extends event.EventEmitter {
         assert(sourceUrl);
         assert(sourceCollection);
         const mongoClient = await MongoClient.connect(sourceUrl);
-        const changeStream = mongoClient.db().collection(sourceCollection).watch(undefined);
+        const changeStream = mongoClient.db().collection(sourceCollection).watch(this.options.pipeline);
 
         this.sourceClient = mongoClient;
         this.sourceStream = changeStream;
