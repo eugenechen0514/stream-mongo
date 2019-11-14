@@ -31,7 +31,7 @@ class MongoCollectionMirrorSync extends events_1.default.EventEmitter {
             assert_1.default(sourceUrl);
             assert_1.default(sourceCollection);
             const mongoClient = yield mongodb_1.MongoClient.connect(sourceUrl);
-            const changeStream = mongoClient.db().collection(sourceCollection).watch(undefined);
+            const changeStream = mongoClient.db().collection(sourceCollection).watch(this.options.pipeline);
             this.sourceClient = mongoClient;
             this.sourceStream = changeStream;
             return changeStream;
