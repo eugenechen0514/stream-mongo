@@ -34,6 +34,8 @@ export class MongoCollectionMirrorSync extends event.EventEmitter {
     }
 
     async __createChangeStream(sourceUrl: string, sourceCollection: string) {
+        assert(sourceUrl);
+        assert(sourceCollection);
         const mongoClient = await MongoClient.connect(sourceUrl);
         const changeStream = mongoClient.db().collection(sourceCollection).watch(undefined);
 
@@ -43,6 +45,8 @@ export class MongoCollectionMirrorSync extends event.EventEmitter {
     }
 
     async __createWriteStream(targetUrl: string, targetCollection: string) {
+        assert(targetUrl);
+        assert(targetCollection);
         const mongoClient = await MongoClient.connect(targetUrl);
         const db = mongoClient.db();
         const writable = mirrorChangeStreamToMongoDB({dbURL: targetUrl, collection: targetCollection, dbConnection: db});
@@ -81,7 +85,7 @@ export class MongoCollectionMirrorSync extends event.EventEmitter {
 
     async stopWatch() {
         try {
-            this.sourceStream && await this.sourceStream.close();
+            await Promise.all([this.targetClient && this.targetClient.close(), this.sourceClient && this.sourceClient.close()]);
             this.emit(MongoCollectionMirrorSyncEvent.stop);
         } catch (e) {
             return e;

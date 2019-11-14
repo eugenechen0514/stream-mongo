@@ -3,7 +3,7 @@ const expect = chai.expect;
 
 import MongoCollectionMirrorSync from "../src/MongoCollectionMirrorSync";
 
-describe('MongoCollectionMirrorSync', function () {
+describe('MongoCollectionMirrorSync connection', function () {
     this.timeout(3000);
     const sourceUrl = 'mongodb://eugene:1234@127.0.0.1/source';
     const sourceCollection = 'SourceCollection';
@@ -22,15 +22,14 @@ describe('MongoCollectionMirrorSync', function () {
         sync.startWatch()
             .catch(console.log);
 
-        setTimeout(() => {
-            sync.stopWatch();
+        setTimeout(async () => {
+            await sync.stopWatch();
             done();
         }, 1000);
     });
 
     it('when start watching, should get "start" event', (done) => {
         let startEvent = false;
-        let stopEvent = false;
 
         const sync = new MongoCollectionMirrorSync({
             sourceUrl,
@@ -46,15 +45,14 @@ describe('MongoCollectionMirrorSync', function () {
             startEvent = true;
         });
 
-        sync.stopWatch();
-
-        setTimeout(() => {
+        setTimeout(async () => {
             expect(startEvent).be.eq(true);
+            await sync.stopWatch();
             done();
         }, 1000);
     });
 
-    it('when start watching, status should be {source: true, target: true}', (done) => {
+    it('when start watching, "status" should be {source: true, target: true}', (done) => {
 
         const sync = new MongoCollectionMirrorSync({
             sourceUrl,
@@ -69,9 +67,53 @@ describe('MongoCollectionMirrorSync', function () {
         setTimeout(async () => {
             const status = await sync.status();
             expect(status).be.deep.eq({source: true, target: true});
-            sync.stopWatch();
+            await sync.stopWatch();
             done();
         }, 1000);
+    });
+
+    it('when stop watching, "status" should be {source: false, target: false}', (done) => {
+        const sync = new MongoCollectionMirrorSync({
+            sourceUrl,
+            sourceCollection,
+            targetUrl,
+            targetCollection
+        });
+
+        sync.startWatch()
+            .catch(console.log);
+
+
+        setTimeout(async () => {
+            await sync.stopWatch();
+
+            const status = await sync.status();
+            expect(status).be.deep.eq({source: false, target: false});
+            done();
+        }, 2000);
+    });
+
+    it('when start watching and close source client, "status" should be {source: false, target: true}', (done) => {
+        const sync = new MongoCollectionMirrorSync({
+            sourceUrl,
+            sourceCollection,
+            targetUrl,
+            targetCollection
+        });
+
+        sync.startWatch()
+            .catch(console.log);
+
+
+        setTimeout(async () => {
+             sync.sourceClient && await sync.sourceClient.close();
+
+            const status = await sync.status();
+            expect(status).be.deep.eq({source: false, target: true});
+
+            await sync.stopWatch();
+            done();
+        }, 2000);
     });
 
     it('when stop watching, should get "stop" event', (done) => {
@@ -91,9 +133,8 @@ describe('MongoCollectionMirrorSync', function () {
             stopEvent = true;
         });
 
-        sync.stopWatch();
-
-        setTimeout(() => {
+        setTimeout(async () => {
+            await sync.stopWatch();
             expect(stopEvent).be.eq(true);
             done();
         }, 1000);
