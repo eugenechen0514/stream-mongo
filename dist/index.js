@@ -21,6 +21,10 @@ const mongodb_1 = require("mongodb");
 const MongoTypes_1 = require("./MongoTypes");
 __export(require("./MongoCollectionMirrorSync"));
 __export(require("./MongoTypes"));
+/**
+ *
+ * Source code from: https://github.com/AbdullahAli/node-stream-to-mongo-db
+ */
 function insertStreamToMongoDB(options = { dbURL: '', collection: '' }) {
     assert_1.default(options.dbURL, '"dbURL" should no empty');
     assert_1.default(options.collection, '"collection" should no empty');
