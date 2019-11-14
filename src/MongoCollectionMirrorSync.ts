@@ -3,7 +3,8 @@ import {
     createLogChangeStreamTransform,
     mirrorChangeStreamToMongoDB
 } from "./index";
-import {MongoClient} from "mongodb";
+import {ChangeStream, MongoClient} from "mongodb";
+import {Writable} from "stream";
 
 export interface MongoCollectionSyncOptions {
     sourceUrl: string,
@@ -15,14 +16,16 @@ export interface MongoCollectionSyncOptions {
 
 export class MongoCollectionMirrorSync {
     options: MongoCollectionSyncOptions;
+    sourceStream?: ChangeStream;
+    targetStream?: Writable;
+
     constructor(options: MongoCollectionSyncOptions) {
         this.options = Object.assign({cloneBeforeWatch: true}, options);
     }
 
     async __createChangeStream(sourceUrl: string, sourceCollection: string) {
         const mongoClient = await MongoClient.connect(sourceUrl);
-        const changeStream = mongoClient.db().collection(sourceCollection).watch(undefined);
-        return changeStream;
+        return mongoClient.db().collection(sourceCollection).watch(undefined);
     }
 
     async startWatch() {
@@ -38,12 +41,24 @@ export class MongoCollectionMirrorSync {
         }
 
         const changeStream = await this.__createChangeStream(sourceUrl, sourceCollection);
+        this.sourceStream = changeStream;
+
         const transform = await createLogChangeStreamTransform();
         const writable = mirrorChangeStreamToMongoDB({dbURL: targetUrl, collection: targetCollection});
+        this.targetStream = writable;
+
         changeStream.pipe(transform).pipe(writable);
         console.log('start watching...')
 
         // TODO: Error handling: close/error/retry
+    }
+
+    async stopWatch() {
+        try {
+            this.sourceStream && await this.sourceStream.close();
+        } catch (e) {
+            return e;
+        }
     }
 }
 

@@ -11,11 +11,14 @@ module.exports = function (wallaby) {
             runner: 'node'
         },
         testFramework: 'mocha',
+        runMode: 'onsave',
         debug: true,
         // workers: {
         //     initial: 1,
         //     regular: 1,
         //     // restart: true,
         // },
+        setup: function(wallaby) {
+        },
     };
 };
