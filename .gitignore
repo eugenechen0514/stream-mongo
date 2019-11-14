@@ -62,7 +62,6 @@ typings/
 
 .idea
 build
-examples/eugeneTest*
 
 src/*.js
 tests/*.js
