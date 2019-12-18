@@ -361,8 +361,8 @@ export async function createLogDocIdTransform() {
     return myTransform
 }
 
-export async function cloneCollection(sourceUrl: string, sourceCollection: string , targetUrl: string, targetCollection: string) {
-    const inputStream = await createAllStream(sourceUrl, sourceCollection);
+export async function cloneCollection(sourceUrl: string, sourceCollection: string , targetUrl: string, targetCollection: string, options: {query?: any} = {}) {
+    const inputStream = await createAllStream(sourceUrl, sourceCollection, {query: options.query});
     const transformStream = await createLogDocIdTransform();
     const outputStream = await cloneStreamToMongoDB({dbURL: targetUrl, collection: targetCollection});
 

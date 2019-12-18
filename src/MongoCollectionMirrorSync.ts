@@ -15,6 +15,7 @@ export interface MongoCollectionSyncOptions {
     targetCollection: string,
     cloneBeforeWatch?: boolean,
     pipeline?: any[],
+    cloneQuery?: any,
 }
 
 enum MongoCollectionMirrorSyncEvent {
@@ -62,10 +63,11 @@ export class MongoCollectionMirrorSync extends event.EventEmitter {
         const sourceCollection = this.options.sourceCollection;
         const targetUrl = this.options.targetUrl;
         const targetCollection = this.options.targetCollection;
+        const cloneQuery = this.options.cloneQuery;
 
         if(this.options.cloneBeforeWatch) {
             console.log('Start clone...');
-            await cloneCollection(sourceUrl, sourceCollection, targetUrl, targetCollection);
+            await cloneCollection(sourceUrl, sourceCollection, targetUrl, targetCollection, {query: cloneQuery});
             console.log('Clone done');
         }
 
