@@ -55,9 +55,10 @@ class MongoCollectionMirrorSync extends events_1.default.EventEmitter {
             const sourceCollection = this.options.sourceCollection;
             const targetUrl = this.options.targetUrl;
             const targetCollection = this.options.targetCollection;
+            const cloneQuery = this.options.cloneQuery;
             if (this.options.cloneBeforeWatch) {
                 console.log('Start clone...');
-                yield index_1.cloneCollection(sourceUrl, sourceCollection, targetUrl, targetCollection);
+                yield index_1.cloneCollection(sourceUrl, sourceCollection, targetUrl, targetCollection, { query: cloneQuery });
                 console.log('Clone done');
             }
             // Create clients

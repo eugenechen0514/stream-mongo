@@ -338,9 +338,9 @@ function createLogDocIdTransform() {
     });
 }
 exports.createLogDocIdTransform = createLogDocIdTransform;
-function cloneCollection(sourceUrl, sourceCollection, targetUrl, targetCollection) {
+function cloneCollection(sourceUrl, sourceCollection, targetUrl, targetCollection, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        const inputStream = yield createAllStream(sourceUrl, sourceCollection);
+        const inputStream = yield createAllStream(sourceUrl, sourceCollection, { query: options.query });
         const transformStream = yield createLogDocIdTransform();
         const outputStream = yield cloneStreamToMongoDB({ dbURL: targetUrl, collection: targetCollection });
         const stream = inputStream.pipe(transformStream).pipe(outputStream);
