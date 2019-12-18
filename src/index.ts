@@ -344,9 +344,10 @@ export function mirrorChangeStreamToMongoDB(options: MirrorStreamToMongoDBOption
     return writable;
 }
 
-export async function createAllStream(sourceUrl: string, sourceCollection: string) {
+export async function createAllStream(sourceUrl: string, sourceCollection: string, options: {query?: any} = {query: {}}) {
+    const {query = {}} = options;
     const mongoClient = await MongoClient.connect(sourceUrl);
-    return mongoClient.db().collection(sourceCollection).find().stream();
+    return mongoClient.db().collection(sourceCollection).find(query).stream();
 }
 
 export async function createLogDocIdTransform() {

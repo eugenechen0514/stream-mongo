@@ -317,10 +317,11 @@ function mirrorChangeStreamToMongoDB(options = { dbURL: '', collection: '' }) {
     return writable;
 }
 exports.mirrorChangeStreamToMongoDB = mirrorChangeStreamToMongoDB;
-function createAllStream(sourceUrl, sourceCollection) {
+function createAllStream(sourceUrl, sourceCollection, options = { query: {} }) {
     return __awaiter(this, void 0, void 0, function* () {
+        const { query = {} } = options;
         const mongoClient = yield mongodb_1.MongoClient.connect(sourceUrl);
-        return mongoClient.db().collection(sourceCollection).find().stream();
+        return mongoClient.db().collection(sourceCollection).find(query).stream();
     });
 }
 exports.createAllStream = createAllStream;
