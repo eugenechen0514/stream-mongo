@@ -77,6 +77,7 @@ export class MongoCollectionMirrorSync extends event.EventEmitter {
 
         const transform = await createLogChangeStreamTransform();
 
+        // @ts-ignore
         changeStream.pipe(transform).pipe(writable);
         console.log('start watching...');
 

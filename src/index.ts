@@ -285,6 +285,7 @@ export function mirrorChangeStreamToMongoDB(options: MirrorStreamToMongoDBOption
             }
             throw new Error('invalid operationType');
         });
+        // @ts-ignore
         await collection.bulkWrite(ops);
         records = [];
     };
