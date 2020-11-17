@@ -1,7 +1,7 @@
 {
   "name": "stream-mongo",
-  "version": "0.2.5",
-  "private": true,
+  "version": "0.2.6",
+  "private": false,
   "description": "",
   "main": "dist/index.js",
   "types": "types/main.d.ts",

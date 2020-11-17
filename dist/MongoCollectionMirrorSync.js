@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MongoCollectionMirrorSync = void 0;
 const mongodb_1 = require("mongodb");
 const assert_1 = __importDefault(require("assert"));
 const events_1 = __importDefault(require("events"));
@@ -65,6 +66,7 @@ class MongoCollectionMirrorSync extends events_1.default.EventEmitter {
             const changeStream = yield this.__createChangeStream(sourceUrl, sourceCollection);
             const writable = yield this.__createWriteStream(targetUrl, targetCollection);
             const transform = yield index_1.createLogChangeStreamTransform();
+            // @ts-ignore
             changeStream.pipe(transform).pipe(writable);
             console.log('start watching...');
             this.emit(MongoCollectionMirrorSyncEvent.start);
