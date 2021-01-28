@@ -8,7 +8,10 @@
   "scripts": {
     "dev": "tsc -p ./tsconfig.json -w",
     "dist": "tsc -p ./tsconfig.json -outDir ./dist",
-    "deploy": "npm upgrade & npm run dist & npm publish"
+    "deploy": "npm upgrade & npm run dist & npm publish",
+    "ip": "npm install --registry http://dev-npm.ssp.hinet.net:4873",
+    "pp": "npm publish --registry http://dev-npm.ssp.hinet.net:4873",
+    "up": "npm upgrade --registry http://dev-npm.ssp.hinet.net:4873"
   },
   "repository": {
     "type": "git",
@@ -24,15 +27,15 @@
   },
   "homepage": "https://github.com/eugenechen0514/stream-mongo#readme",
   "dependencies": {
-    "debug": "^4.2.0",
+    "debug": "^4.3.1",
     "mongodb": "^3.6.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
     "@types/debug": "^4.1.5",
     "@types/mocha": "^5.2.7",
-    "@types/mongodb": "^3.5.33",
-    "@types/node": "^12.19.4",
+    "@types/mongodb": "^3.6.3",
+    "@types/node": "^14.14.22",
     "chai": "^4.2.0",
     "mocha": "^6.2.3",
     "typescript": "^3.9.7"
